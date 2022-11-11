@@ -1,0 +1,45 @@
+*{
+    // outline: 1px solid red;
+}
+
+body{
+    font-family: "Comic Sans MS";
+
+    p{
+        margin: 0px;
+        padding: 0px;
+    }
+
+    textarea{
+        width: 100%;
+    }
+
+    #main_container{
+        margin: auto;
+        padding-top: 10px;
+        width: 600px;
+
+        #post_message{
+
+            input[type=submit]{
+                display: inline-block;
+                margin-right: -15px;
+            }
+        }
+
+        .message_container{
+
+            .comments_container{
+                font-size: 14px;
+
+                div, form{
+                    margin-left: 60px;
+                }
+            }
+        }
+    }
+
+    #username{
+        font-weight: bold;
+    }
+}

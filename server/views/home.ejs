@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>The Wall</title>
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+        <script type="text/javascript" src="/jquery/jquery.js"></script>
+        <script type="text/javascript" src="/javascripts/main.js"></script>
+    </head>
+    <body>
+        <h1>CodingDojo Wall</h1>
+        <h4>Welcome <span id="username"><%= user.first_name %></span></h4>
+        <a href="/logout">Sign off </a>
+        <div id="main_container">
+            <form id="post_message">
+                <h3>Post a message</h3>
+                <textarea id="message" name="message"></textarea>
+                <input type="submit" value="Post a message"/>
+            </form>
+            <div id="group_messages_container">
+<%
+    if(data.length)
+    {
+        for(let { message_id, message, msg_created_at, messenger, comments: comments_json } of data){
+            comments = JSON.parse(comments_json || '[]');
+%>
+                <section class="message_container">
+                    <p><%= messenger %> - <span><%= msg_created_at %></span></p>
+                    <p><%= message %></p>
+                    <button class="delete_message_btn" name="message_id" value="<%= message_id %>"> Delete </button>
+                    <div class="comments_container">
+<%
+        for(let { comment_id, comment, commenter, comment_created_at } of comments){
+%>
+                        <div>
+                            <p><%= commenter %> - <span><%= comment_created_at %></span></p>
+                            <p><%= comment %></p>
+                            <button class="delete_comment_btn" value="<%= comment_id %>"> Delete </button>
+                            <input type="hidden" id="msg_comment_id_<%= comment_id %>" value="<%= message_id %>"/>
+                        </div>
+<%
+        }
+%>
+                        <form class="post_comment" value="<%= message_id %>">
+                            <h3>Post a comment</h3>
+                            <textarea id="to_msg_id_<%= message_id %>" name="comment"></textarea>
+                            <input type="submit" value="Post a comment"/>
+                        </form>
+                    </div>
+                </section>
+<%
+        }
+    }
+%>
+            </div>
+        </div>
+    </body>
+</html>

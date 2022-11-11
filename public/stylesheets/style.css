@@ -1,0 +1,28 @@
+body {
+  font-family: "Comic Sans MS";
+}
+body p {
+  margin: 0px;
+  padding: 0px;
+}
+body textarea {
+  width: 100%;
+}
+body #main_container {
+  margin: auto;
+  padding-top: 10px;
+  width: 600px;
+}
+body #main_container #post_message input[type=submit] {
+  display: inline-block;
+  margin-right: -15px;
+}
+body #main_container .message_container .comments_container {
+  font-size: 14px;
+}
+body #main_container .message_container .comments_container div, body #main_container .message_container .comments_container form {
+  margin-left: 60px;
+}
+body #username {
+  font-weight: bold;
+}
