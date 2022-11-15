@@ -1,0 +1,34 @@
+<%
+    if(messages?.length){
+
+        for(let { message_id, msg_author, msg_created_at, message, comments_json } of messages){
+%>
+        <section>
+            <div class="message_container">
+                <p class=""><%= msg_author %> - <span><%= msg_created_at %></span></p>
+                <p class="message"><%= message %></p>
+                <a class="delete_message" value="<%= message_id %>">Delete</a>
+            </div>
+
+            <div class="comments_group">
+<%
+        let comments_array = JSON.parse(comments_json || '[]');
+        for(let { comment, comment_id, created_at, cmts_author } of comments_array){
+%>
+                <div class="comment_container">
+                    <p class=""><%= cmts_author %> - <span><%= created_at %></span></p>
+                    <p class="comment"><%= comment %></p>
+                    <a class="delete_comment" value="<%= comment_id %>">Delete</a>
+                </div>
+<%
+        }
+%>
+                <form class="comment_form" value="<%= message_id %>">
+                    <textarea class="comment" id="<%= 'comment_for_message_id_' + message_id %>"></textarea>
+                    <input type="submit" value="Post a comment"/>
+                </form>
+            </div>
+<%
+        }
+    }
+%>
