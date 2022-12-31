@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  mysqldb:
+    image: mysql:8.0.25
+    container_name: mysql_container
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    volumes:
+      - ./the_wall/server/migrations/init.sql:/docker-entrypoint-initdb.d/0_init.sql
+      - $HOME/database:/var/lib/mysql
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    environment:
+      MYSQL_DATABASE: the_wall
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysqldb
+    networks:
+      - internalnet
+  app:
+    container_name: the_wall
+    build: ./
+    image: the_wall:december
+    command: "npm run dev"
+    ports:
+      - 3000:3000
+      - 9229:9229
+    volumes:
+      - ./:/var/www/the_wall
+    depends_on: 
+      - mysqldb
+    networks:
+      - internalnet
+
+networks:
+  internalnet:
+    driver: bridge

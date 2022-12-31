@@ -16,56 +16,56 @@ $(document).ready(() => {
         e.preventDefault();
     });
 
-    $("#message_form").on("submit", (e) => {
-        $.post("/add_message", convertToJson("#message"))
-        .done((data) => {
-            $("#message_and_comments_container").empty();
-            $("#message_and_comments_container").append(data);
-        });
-        e.preventDefault();
-    });
+    $(document).on("click", "#signout", function(){
 
-    $(document).on("submit", ".comment_form", function(){
-        let message_id = $(this).attr("value");
-        let comment = $("#comment_for_message_id_"+message_id).val();
-
-        $.post("/add_comment", {message_id, comment})
-        .done((data) => {
-            $("#message_and_comments_container").empty();
-            $("#message_and_comments_container").append(data);
+        $.get("/logout", {})
+        .done(() => {
+            window.location.href = '/';
         });
 
         return false;
     });
 
-    $(document).on("click", ".delete_message", function(){
+    $(document).on("submit", "#post_a_message", function(){
+
+        let message = $("#message").val();
+        $.post("/add_message", { message })
+        .done(() => {
+            window.location.href = '/home';
+        });
+
+        return false;
+    });
+
+    $(document).on("submit", ".post_a_comment", function(){
         let message_id = $(this).attr("value");
-        $.post("/delete_message", {message_id})
-        .done((data) => {
-            $("#message_and_comments_container").empty();
-            $("#message_and_comments_container").append(data);
+        let comment = $("#comment_" + message_id).val();
+
+        $.post("/add_comment", { message_id, comment })
+        .done(() => {
+            window.location.href = '/home';
         });
 
         return false;
     });
 
     $(document).on("click", ".delete_comment", function(){
-        let comment_id = $(this).attr("value");
+        let content_id = $(this).attr("value");
 
-        $.post("/delete_comment", {comment_id})
-        .done((data) => {
-            $("#message_and_comments_container").empty();
-            $("#message_and_comments_container").append(data);
+        $.post("/delete_content", { content_id })
+        .done(() => {
+            window.location.href = '/home';
         });
 
         return false;
     });
+    
+    $(document).on("click", ".delete_message", function(){
+        let content_id = $(this).attr("value");
 
-    $(document).on("click", "#signout", function(){
-
-        $.get("/logout", {})
+        $.post("/delete_content", { is_message: 1, content_id })
         .done(() => {
-            window.location.href = '/';
+            window.location.href = '/home';
         });
 
         return false;

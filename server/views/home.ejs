@@ -4,54 +4,50 @@
         <title>The Wall: Home</title>
         <link rel='stylesheet' href='/stylesheets/style.css' />
         <script type="text/javascript" src="/jquery/jquery.js"></script>
+        <script type=""></script>
         <script type="text/javascript" src="/javascripts/main.js"></script>
     </head>
     <body>
         <h1>CodingDojo Wall</h1>
-        <h3>Hi Welcome, <%= user_data.first_name %></h3>
-        <a id="signout">sign out</a>
+        <a href="/logout">signout</a>
+        <form id="post_a_message">
+            <textarea id="message"></textarea>
+            <input type="submit" value="Post a Message">
+        </form>
         <div id="main_container">
-            <form id="message_form">
-                <textarea name="message" id="message"></textarea>
-                <input type="submit" value="Post a message"/>
-            </form>
-
-            <div id="message_and_comments_container">
 <%
-    if(messages?.length){
-
-        for(let { message_id, msg_author, msg_created_at, message, comments_json } of messages){
+    if(status && result?.length > 0){
+        for(let { message_id, messenger, message, messaged_at, is_msg_archivable, comments } of result){
+            let parsed_comments = JSON.parse(comments);
 %>
-                <section>
-                    <div class="message_container">
-                        <p class=""><%= msg_author %> - <span><%= msg_created_at %></span></p>
-                        <p class="message"><%= message %></p>
-                        <a class="delete_message" value="<%= message_id %>">Delete</a>
-                    </div>
-
-                    <div class="comments_group">
+            <div class="message_container">
+                <p><%= message %></p>
+                <p><%= messenger %> - <%= messaged_at %> | <% if(is_msg_archivable){ %> <a class="delete_message" value="<%= message_id %>">Delete</a> <% } %></p>
 <%
-            let comments_array = JSON.parse(comments_json || '[]');
-            for(let { comment, comment_id, created_at, cmts_author } of comments_array){
+            if(parsed_comments?.length > 0){
 %>
-                        <div class="comment_container">
-                            <p class=""><%= cmts_author %> - <span><%= created_at %></span></p>
-                            <p class="comment"><%= comment %></p>
-                            <a class="delete_comment" value="<%= comment_id %>">Delete</a>
-                        </div>
+                <div class="comments">
+<%
+                    for(let { comment, commenter, comment_id, commented_at, is_cmt_archivable } of parsed_comments){
+%>
+                    <p><%= comment %></p>
+                    <p><%= messenger %> - <%= messaged_at %> <% if(is_cmt_archivable){ %> | <a class="delete_comment"  value="<%= comment_id %>">Delete</a> <% } %></p>
+<%
+                    }
+%>
+                </div>
 <%
             }
 %>
-                        <form class="comment_form" value="<%= message_id %>">
-                            <textarea class="comment" id="<%= 'comment_for_message_id_' + message_id %>"></textarea>
-                            <input type="submit" value="Post a comment"/>
-                        </form>
-                    </div>
+            <form class="post_a_comment" value="<%= message_id %>">
+                <textarea id="comment_<%= message_id %>"></textarea>
+                <input type="submit" value="Post a Comment">
+            </form>
+            </div>
 <%
         }
     }
 %>
-</div>
         </div>
     </body>
 </html>

@@ -1,52 +1,53 @@
 import messageModel from "../models/message.model";
+
 class MessagesController{
+    getMessages = async (req, res, next) => {
+
+        let response_data = { status: false, result: {}, error: null };
+
+        try {
+            response_data = await messageModel.getMessages(req.session.user.id);
+        }
+        catch(error){
+            console.log(error);
+            response_data.status = false;
+            response_data.error = error;
+        }
+
+        res.render('home', response_data);
+    }
 
     addMessage = async (req, res, next) => {
+
         let response_data = { status: false, result: {}, error: null };
 
         try {
-            let { message } = req.body;
-            response_data = await messageModel.addMessage(message, req.session.user.id);
 
-            if(response_data.status){
-                response_data = await messageModel.getMessagesAndComments();
-            }
+            response_data = await messageModel.addMessage(req.session.user.id, req.body.message);
         }
         catch(error){
             console.log(error);
+            response_data.status = false;
             response_data.error = error;
         }
 
-        res.render('partials/message', {messages: response_data.result, user_data: req.session.user});
+        res.render('home', response_data);
     }
 
-    getMessagesAndComments = async (req, res, next) => {
-        let response_data = { status: false, result: {}, error: null };
+    deleteContent = async (req, res, next) => {
 
+        let response_data = { status: false, result: {}, error: null };
+console.log('req.body :>> ', req.body);
         try {
-            response_data = await messageModel.getMessagesAndComments();
+            response_data = await messageModel.deleteContent(req.session.user.id, req.body.is_message ? "messages" : "comments", req.body.content_id);
         }
         catch(error){
             console.log(error);
+            response_data.status = false;
             response_data.error = error;
         }
 
-        res.render('home', {messages: response_data.result, user_data: req.session.user});
-    }
-
-    deleteMessage = async (req, res, next) => {
-        let response_data = { status: false, result: {}, error: null };
-
-        try {
-            await messageModel.deleteMessage(req.body.message_id, req.session.user.id);
-            response_data = await messageModel.getMessagesAndComments();
-        }
-        catch(error){
-            console.log(error);
-            response_data.error = error;
-        }
-
-        res.render('partials/message', {messages: response_data.result, user_data: req.session.user});
+        res.render('home', response_data);
     }
 }
 

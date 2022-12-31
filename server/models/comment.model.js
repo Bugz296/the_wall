@@ -1,40 +1,23 @@
-import DatabaseModel from "./lib/database.model";
-import {format as mysqlFormat} from "mysql";
+import DatabaseModel from "../../../the_wall/server/models/lib/database.model";
+import messageModel from "./message.model";
 
-class CommentModel extends DatabaseModel{
-
+import { format as mysqlFormat } from "mysql";
+class UserModel extends DatabaseModel{
     constructor(){
         super();
     }
 
-    addComment = async(comment, user_id, message_id) => {
+    addComment = async(user_id, comment, message_id) => {
         let response_data = { status: false, result: {}, error: null };
 
         try {
-            let insert_query = mysqlFormat(`INSERT INTO comments SET comment = ?, user_id = ?, message_id = ?, created_at = NOW();`, [comment, user_id, message_id]);
-            response_data.result = await this.executeQuery(insert_query);
 
-            if(response_data.result?.insertId){
-                response_data.status = true;
-            }
+            let insert_query = mysqlFormat(`INSERT INTO comments SET ?, created_at = NOW();`, [{user_id, comment, message_id}]);
+            await this.executeQuery(insert_query);
+            response_data.result = await messageModel.getMessages(user_id);
+            response_data.status = true;
         }
-        catch(error){
-            console.log(error);
-            response_data.error = error;
-        }
-
-        return response_data;
-    }
-
-    deleteComment = async(comment_id, user_id) => {
-        let response_data = { status: false, result: {}, error: null };
-
-        try {
-            let delete_query = mysqlFormat(`DELETE FROM comments WHERE id = ? AND user_id = ? AND TIMESTAMPDIFF(minute, created_at, NOW()) > 30;`, [comment_id, user_id]);
-            let delete_result = await this.executeQuery(delete_query);
-            response_data.status = delete_result.affectedRows > 0;
-        }
-        catch(error){
+        catch (error) {
             console.log(error);
             response_data.error = error;
         }
@@ -43,4 +26,4 @@ class CommentModel extends DatabaseModel{
     }
 }
 
-export default new CommentModel();
+export default new UserModel();

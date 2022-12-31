@@ -2,10 +2,13 @@ import mysql from "mysql";
 class DatabaseModel{
     constructor(){
         this.connection = mysql.createConnection({
-            host: 'localhost',
+            host: '172.26.0.1',
             database: 'the_wall',
             user: 'root',
-            password: ''
+            password: 'password',
+            port: 3306,
+            connectTimeout: 10000,
+            charset: 'utf8mb4'
         })
     }
 

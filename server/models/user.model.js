@@ -1,4 +1,4 @@
-import DatabaseModel from "./lib/database.model";
+import DatabaseModel from "../../../the_wall/server/models/lib/database.model";
 import { format as mysqlFormat } from "mysql";
 class UserModel extends DatabaseModel{
     constructor(){

@@ -1,40 +1,8 @@
-body {
-  margin: auto;
-  width: 600px;
+* {
+  /* outline: 1px solid red; */
 }
-body h1 {
-  text-align: center;
-}
-body #main_container form {
-  margin: auto;
-  text-align: center;
-}
-body #main_container form input[type=submit] {
-  margin-top: 10px;
-}
-body #main_container form textarea {
-  display: block;
-  width: 80%;
-  margin: auto;
-}
-body #main_container section p {
-  margin: 0px;
-  padding: 0px;
-}
-body #main_container section .message {
-  padding: 10px;
-}
-body #main_container section .comments_group {
-  width: 80%;
-  margin-left: 100px;
-}
-body #main_container section .comments_group .comment_container {
-  margin-top: 10px;
-}
-body #main_container section .comments_group form input[type=submit] {
-  margin-top: 10px;
-}
-body #main_container section .comments_group form textarea {
-  display: block;
-  width: 80%;
+
+body #main_container #messages_container .message_container p {
+  border: 1px solid green;
+  margin-left: 20px !important;
 }
